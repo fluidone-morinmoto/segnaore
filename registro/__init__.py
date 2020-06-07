@@ -1,4 +1,6 @@
 import logging
+from django.conf import settings
+
 
 default_app_config = 'registro.apps.RegistroConfig'
 

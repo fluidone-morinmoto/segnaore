@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import logging
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'registro.apps.RegistroConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +104,14 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # Since among loggers and handlers levels the one which wins is the highest,
 # keep the 'base' logger level to DEBUG (low) and set the desired level in the
