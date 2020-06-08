@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from registro.models import *
-from . import logging
+from . import logger
 
 
 # Serializers define the API representation.
