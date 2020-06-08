@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-
+from registro.abstracts import *
 
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
@@ -74,7 +74,7 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
-class Category(models.Model):
+class Category(Timestamps, SoftDelete):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
@@ -88,13 +88,10 @@ class Category(models.Model):
         db_table = 'category'
 
 
-class Company(models.Model):
+class Company(Timestamps, SoftDelete):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     auth_user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
-    deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -145,31 +142,27 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-class Project(models.Model):
+class Project(Timestamps, SoftDelete):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     code = models.CharField(max_length=255, blank=True, null=True)
     company = models.ForeignKey(Company, models.DO_NOTHING, blank=True, null=True)
     auth_user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
-    deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'project'
 
 
-class WorkedHours(models.Model):
+class WorkedHours(Timestamps):
     id = models.BigAutoField(primary_key=True)
     from_time = models.DateTimeField(blank=True, null=True)
     to_time = models.DateTimeField(blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     category = models.ForeignKey(Category, models.DO_NOTHING, blank=True, null=True)
     project = models.ForeignKey(Project, models.DO_NOTHING, blank=True, null=True)
-    created_at = models.DateTimeField()
-
+    
     class Meta:
         managed = False
         db_table = 'worked_hours'

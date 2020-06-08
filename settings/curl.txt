@@ -1,13 +1,13 @@
 ## username = fluidone
 ## password = fluidone123
-## token = 64f92ceb05860339c9522240e5e1b76e26c3e409
+## token = 02e1ff4a62dab75a8f6c9464af0d0605e00ef8cd
 
 curl -X GET http://localhost:8081/worked_hours/
 
-curl -X POST http://localhost:8081/projects/ -d 'name=unproject code=uncodice created_at=2020-06-08 00:00:00'  -H 'Authorization: Token 64f92ceb05860339c9522240e5e1b76e26c3e409'
+curl -X POST http://localhost:8081/projects/ -d 'name=unproject&code=uncodice'  -H 'Authorization: Token 02e1ff4a62dab75a8f6c9464af0d0605e00ef8cd'
 
 ## Login test
 
 curl -X POST http://localhost:8081/api-token-auth/ -d "username=fluidone&password=fluidone123"
 
-curl -X DELETE http://localhost:8081/projects/3/ -H 'Authorization: Token 64f92ceb05860339c9522240e5e1b76e26c3e409'
+curl -X DELETE http://localhost:8081/projects/3/ -H 'Authorization: Token 02e1ff4a62dab75a8f6c9464af0d0605e00ef8cd'
