@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_registration',
     'registro.apps.RegistroConfig',
     'rest_framework',
     'rest_framework.authtoken',
@@ -71,6 +72,10 @@ TEMPLATES = [
         },
     },
 ]
+
+ACCOUNT_ACTIVATION_DAYS = 7
+LOGIN_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 WSGI_APPLICATION = 'segna_ore.wsgi.application'
 

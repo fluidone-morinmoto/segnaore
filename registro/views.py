@@ -23,3 +23,13 @@ class CompanyViewSet(viewsets.ModelViewSet):
 class WorkedHoursViewSet(viewsets.ModelViewSet):
     queryset = WorkedHours.objects.all()
     serializer_class = WorkedHoursSerializer
+
+
+# def profile(request):
+#     logged_user = request.user
+#     template = loader.get_template('registration/profile.html')
+#     context = {
+#         'user': logged_user,
+#         'valore_a_caso': "ciao"
+#     }
+#     return HttpResponse(template.render(context, request))

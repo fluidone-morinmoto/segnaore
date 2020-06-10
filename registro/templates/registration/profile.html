@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block content %}
+
+{% csrf_token %}
+
+Benvenuto {{ user.username }}  {{ valore_a_caso }}
+
+<a href="/accounts/logout/">Logout</a>
+{% endblock %}

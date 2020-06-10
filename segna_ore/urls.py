@@ -17,11 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
+from django.contrib.auth import views as auth_views
 from rest_framework.authtoken import views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api-token-auth/', views.obtain_auth_token),
     path('', include('registro.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django_registration.backends.activation.urls')),
+    path('accounts/login/', auth_views.LoginView.as_view()),
+    path('accounts/profile/', TemplateView.as_view(template_name='registration/profile.html')),
 ]
