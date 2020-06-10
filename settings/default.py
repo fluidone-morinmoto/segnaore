@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'registro.apps.RegistroConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [
