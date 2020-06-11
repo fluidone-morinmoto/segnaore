@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
 {% block title %}
-Profile
+Email sent
 {% endblock %}
 
 {% block content %}
 
 {% csrf_token %}
 
-Benvenuto {{ user.username }}
+Controlla l'indirizzo email
 
+<a href="/accounts/login/">Login</a>
 <a href="/accounts/logout/">Logout</a>
 {% endblock %}

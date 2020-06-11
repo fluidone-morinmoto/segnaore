@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from registro.abstracts import *
+from registro.profile import *
 
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
@@ -52,7 +53,6 @@ class AuthUser(models.Model):
     class Meta:
         managed = False
         db_table = 'auth_user'
-
 
 class AuthUserGroups(models.Model):
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
@@ -141,7 +141,6 @@ class DjangoSession(models.Model):
         managed = False
         db_table = 'django_session'
 
-
 class Project(Timestamps, SoftDelete):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
@@ -162,7 +161,7 @@ class WorkedHours(Timestamps):
     description = models.CharField(max_length=255, blank=True, null=True)
     category = models.ForeignKey(Category, models.DO_NOTHING, blank=True, null=True)
     project = models.ForeignKey(Project, models.DO_NOTHING, blank=True, null=True)
-    
+
     class Meta:
         managed = False
         db_table = 'worked_hours'
