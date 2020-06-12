@@ -80,6 +80,9 @@ def activate(request, uidb64, token):
 def home(request):
     return render(request, 'home.html')
 
+def index(request):
+    return render(request, 'index.html')
+
 # TODO implement the profile view
 # def profile(request):
 #     logged_user = request.user
