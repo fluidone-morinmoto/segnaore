@@ -20,6 +20,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import views as auth_views
 from rest_framework.authtoken import views
 from django.views.generic import TemplateView
+from registro import views as registro_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +30,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('django_registration.backends.activation.urls')),
     path('accounts/login/', auth_views.LoginView.as_view()),
-    path('accounts/profile/', TemplateView.as_view(template_name='registration/profile.html')),
+    #path('accounts/profile/', TemplateView.as_view(template_name='registration/profile.html')),
+    url('accounts/profile/', registro_views.profile, name='profile'),
 ]

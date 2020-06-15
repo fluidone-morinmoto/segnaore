@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
@@ -10,7 +10,6 @@ from django.utils.encoding import force_bytes
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework import viewsets
-
 
 from registro.models import *
 from registro.serializers import *
@@ -79,23 +78,12 @@ def activate(request, uidb64, token):
     else:
         return render(request, 'account_activation_invalid.html')
 
-class CustomLoginView(auth_views.LoginView):
-    
-    pass
-
+@login_required
 def home(request):
-    return render(request, 'home.html')
+    context = {'page_title': 'home'}
+    return render(request, 'home.html', context=context)
 
-def index(request):
-    return render(request, 'index.html')
-
-# TODO implement the profile view
-# def profile(request):
-#     logged_user = request.user
-#     template = loader.get_template('registration/profile.html')
-#     context = {
-#         'user': logged_user,
-#         'valore_a_caso': "ciao"
-#     }
-#     return HttpResponse(template.render(context, request))
-# END TODO
+@login_required
+def profile(request):
+    context = {'page_title': 'profile'}
+    return render(request, 'registration/profile.html', context=context)

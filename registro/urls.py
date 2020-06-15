@@ -21,5 +21,4 @@ urlpatterns = [
         name='activate'
     ),
     url(r'^home/$', views.home, name='home'),
-    url(r'^index/$', views.index, name='index'),
 ]
