@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
-
+from django.http import HttpResponse, HttpResponseRedirect, QueryDict
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.encoding import force_text
@@ -13,7 +13,7 @@ from rest_framework import viewsets
 
 from registro.models import *
 from registro.serializers import *
-from registro.forms import SignUpForm
+from registro.forms import SignUpForm, CompanyForm
 from registro.tokens import account_activation_token
 from . import logger
 
@@ -87,3 +87,42 @@ def home(request):
 def profile(request):
     context = {'page_title': 'profile'}
     return render(request, 'registration/profile.html', context=context)
+
+@login_required
+def manageCompanies(request):
+    form = None
+    user = request.user
+    companies = Company.objects.filter(auth_user_id=user.id)
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = CompanyForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            name = request.POST['name']
+            company = Company()
+            company.name = name
+            company.auth_user_id = user.id
+            company.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect('/manage/companies')
+    elif request.method == 'DELETE':
+        dict = QueryDict(request.body)
+        companyId = dict['companyId']
+        company = Company.objects.get(pk=companyId)
+        if company.auth_user_id != user.id:
+            msg = "Questa Company non ti appartiene. Non la puoi eliminare"
+            logger.warning(msg)
+        else:
+            msg = "Eliminazione della Company #{} da parte dell'utente #{}"
+            logger.info(msg.format(companyId, user.id))
+            company.delete()
+    else:
+        # if a GET (or any other method) we'll create a blank formelse:
+        form = CompanyForm()
+
+    context = {
+        'page_title': 'Companies',
+        'form': form,
+        'companies': companies
+    }
+    return render(request, 'manageCompanies.html', context=context)

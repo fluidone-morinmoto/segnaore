@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'registro.apps.RegistroConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,8 @@ TEMPLATES = [
         },
     },
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

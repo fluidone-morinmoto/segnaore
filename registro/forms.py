@@ -9,3 +9,9 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2', )
+
+
+class CompanyForm(forms.Form):
+    name = forms.CharField(label='Nome della Company', max_length=100)
+
+    

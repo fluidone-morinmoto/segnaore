@@ -3,12 +3,15 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from registro import views
 
+api_prefix = "v1"
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'projects', views.ProjectViewSet)
-router.register(r'categories', views.CategoryViewSet)
-router.register(r'companies', views.CompanyViewSet)
-router.register(r'worked_hours', views.WorkedHoursViewSet)
+
+router.register(r'v1/projects', views.ProjectViewSet)
+router.register(r'v1/categories', views.CategoryViewSet)
+router.register(r'v1/companies', views.CompanyViewSet)
+router.register(r'v1/worked_hours', views.WorkedHoursViewSet)
 
 
 urlpatterns = [
@@ -21,4 +24,5 @@ urlpatterns = [
         name='activate'
     ),
     url(r'^home/$', views.home, name='home'),
+    url(r'^manage/companies', views.manageCompanies, name='manage_companies'),
 ]

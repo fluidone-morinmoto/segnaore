@@ -1,0 +1,76 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+Companies
+{% endblock %}
+
+{% block content %}
+
+<h2>Crea una nuova Company</h2>
+<form action="/manage/companies" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Salva">
+</form>
+<hr />
+<h2>Lista delle tue Companies</h2>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Modifica</th>
+            <th>Elimina</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in companies %}
+            <tr>
+                <td>{{c.name}}</td>
+                <td><a href="">Modifica #{{c.id}}</a></td>
+                <td>
+                    <a href="#" class="deleteCompany">
+                        Elimina #<span class="companyId">{{c.id}}</span>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script type="text/javascript">
+    function deleteCompany() {
+        jQuery('.deleteCompany').on('click', function(e) {
+            e.preventDefault();
+            var companyId = jQuery(this).find('.companyId').text();
+            var token = jQuery('input[name=csrfmiddlewaretoken]').val();
+            jQuery.ajax({
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", token);
+                },
+                method: 'DELETE',
+                url: '/manage/companies/',
+                data: {
+                    companyId: companyId
+                },
+                dataType: 'json',
+                contentType: 'application/json; charset=UTF-8',
+                success: function() {
+                    alert('Object deleted!')
+                }
+            });
+        });
+    }
+
+    deleteCompany();
+
+</script>
+{% endblock %}
