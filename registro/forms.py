@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from registro.models import *
 
 
 class SignUpForm(UserCreationForm):
@@ -11,7 +12,7 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2', )
 
 
-class CompanyForm(forms.Form):
-    name = forms.CharField(label='Nome della Company', max_length=100)
-
-    
+class CompanyForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = ['name']

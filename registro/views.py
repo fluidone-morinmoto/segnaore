@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
-from django.http import HttpResponse, HttpResponseRedirect, QueryDict
+from django.http import HttpResponse, HttpResponseRedirect, QueryDict, JsonResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.encoding import force_text
@@ -89,20 +89,35 @@ def profile(request):
     return render(request, 'registration/profile.html', context=context)
 
 @login_required
-def manageCompanies(request):
+def manageCompanies(request, company_id=None):
     form = None
     user = request.user
     companies = Company.objects.filter(auth_user_id=user.id)
+
+    form_description = "Crea una nuova "
+
     if request.method == 'POST':
+
         # create a form instance and populate it with data from the request:
         form = CompanyForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
+            company_id = None
+            try:
+                company_id = request.POST['cid']
+            except Exception as e:
+                logger.error(str(e))
             name = request.POST['name']
             company = Company()
+            if company_id is not None:
+                company = Company.objects.get(pk=company_id)
             company.name = name
-            company.auth_user_id = user.id
-            company.save()
+            if company.auth_user_id != user.id:
+                msg = "Non sei il proprietario di questa Company. Non la puoi "
+                msg += "modificare"
+                logger.error(msg);
+            else:
+                company.save()
             # redirect to a new URL:
             return HttpResponseRedirect('/manage/companies')
     elif request.method == 'DELETE':
@@ -114,15 +129,28 @@ def manageCompanies(request):
             logger.warning(msg)
         else:
             msg = "Eliminazione della Company #{} da parte dell'utente #{}"
-            logger.info(msg.format(companyId, user.id))
+            msg.format(companyId, user.id)
+            logger.info(msg)
             company.delete()
+            return JsonResponse({'msg': msg})
     else:
+        company = None
+        company_id = None
+        try:
+            company_id = request.GET['cid']
+        except Exception as e:
+            logger.error(str(e))
+        if company_id is not None:
+            company = Company.objects.get(pk=company_id)
+            form_description = "Modifica "
         # if a GET (or any other method) we'll create a blank formelse:
-        form = CompanyForm()
+        form = CompanyForm(instance=company)
 
     context = {
         'page_title': 'Companies',
         'form': form,
-        'companies': companies
+        'companies': companies,
+        'company_id': company_id,
+        'form_description': form_description
     }
     return render(request, 'manageCompanies.html', context=context)

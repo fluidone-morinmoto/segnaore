@@ -8,10 +8,11 @@ Companies
 
 {% block content %}
 
-<h2>Crea una nuova Company</h2>
+<h2>{{ form_description }} Company</h2>
 <form action="/manage/companies" method="post">
     {% csrf_token %}
     {{ form|crispy }}
+    <input type="hidden" name="cid" value="{{company_id}}" />
     <input type="submit" value="Salva">
 </form>
 <hr />
@@ -27,9 +28,13 @@ Companies
     </thead>
     <tbody>
         {% for c in companies %}
-            <tr>
+            <tr class="company">
                 <td>{{c.name}}</td>
-                <td><a href="">Modifica #{{c.id}}</a></td>
+                <td>
+                    <a href="/manage/companies?cid={{c.id}}">
+                        Modifica #{{c.id}}
+                    </a>
+                </td>
                 <td>
                     <a href="#" class="deleteCompany">
                         Elimina #<span class="companyId">{{c.id}}</span>
@@ -50,8 +55,10 @@ Companies
     function deleteCompany() {
         jQuery('.deleteCompany').on('click', function(e) {
             e.preventDefault();
-            var companyId = jQuery(this).find('.companyId').text();
+            var $this = jQuery(this);
+            var companyId = $this.find('.companyId').text();
             var token = jQuery('input[name=csrfmiddlewaretoken]').val();
+            var row = $this.closest('.company');
             jQuery.ajax({
                 beforeSend: function(xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", token);
@@ -63,8 +70,9 @@ Companies
                 },
                 dataType: 'json',
                 contentType: 'application/json; charset=UTF-8',
-                success: function() {
-                    alert('Object deleted!')
+                success: function(data) {
+                    console.log(row);
+                    row.remove();
                 }
             });
         });
