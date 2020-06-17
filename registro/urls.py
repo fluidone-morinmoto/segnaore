@@ -25,4 +25,5 @@ urlpatterns = [
     ),
     url(r'^home/$', views.home, name='home'),
     url(r'^manage/companies', views.manageCompanies, name='manage_companies'),
+    url(r'^manage/categories', views.manageCategories, name='manage_categories'),
 ]

@@ -13,7 +13,7 @@ from rest_framework import viewsets
 
 from registro.models import *
 from registro.serializers import *
-from registro.forms import SignUpForm, CompanyForm
+from registro.forms import *
 from registro.tokens import account_activation_token
 from . import logger
 
@@ -89,7 +89,7 @@ def profile(request):
     return render(request, 'registration/profile.html', context=context)
 
 @login_required
-def manageCompanies(request, company_id=None):
+def manageCompanies(request):
     form = None
     user = request.user
     companies = Company.objects.filter(auth_user_id=user.id)
@@ -103,20 +103,39 @@ def manageCompanies(request, company_id=None):
         # check whether it's valid:
         if form.is_valid():
             company_id = None
+            logger.debug(request.POST);
             try:
                 company_id = request.POST['cid']
+                logger.info("Edit company #{} by user #{}".format(
+                    company_id, user.id
+                ));
             except Exception as e:
                 logger.error(str(e))
+
             name = request.POST['name']
+
             company = Company()
-            if company_id is not None:
-                company = Company.objects.get(pk=company_id)
+            is_valid = True
+            int_company_id = None
+
+            try:
+                int_company_id = int(company_id)
+            except ValueError as e:
+                msg = "Value '{}' for company_id is not valid"
+                logger.error(e)
+                logger.error(msg.format(company_id))
+
+            if int_company_id is not None:
+                company = Company.objects.get(pk=int_company_id)
+                if company.auth_user_id != user.id:
+                    msg = "Non sei il proprietario di questa Company. Non la "
+                    msg += "puoi modificare"
+                    logger.error(msg)
+                    is_valid = False
+
+            company.auth_user_id = user.id
             company.name = name
-            if company.auth_user_id != user.id:
-                msg = "Non sei il proprietario di questa Company. Non la puoi "
-                msg += "modificare"
-                logger.error(msg);
-            else:
+            if is_valid:
                 company.save()
             # redirect to a new URL:
             return HttpResponseRedirect('/manage/companies')
@@ -133,6 +152,7 @@ def manageCompanies(request, company_id=None):
             logger.info(msg)
             company.delete()
             return JsonResponse({'msg': msg})
+    # If method is GET
     else:
         company = None
         company_id = None
@@ -154,3 +174,93 @@ def manageCompanies(request, company_id=None):
         'form_description': form_description
     }
     return render(request, 'manageCompanies.html', context=context)
+
+@login_required
+def manageCategories(request):
+    form = None
+    user = request.user
+    categories = Category.objects.filter(auth_user_id=user.id)
+
+    form_description = "Crea una nuova "
+
+    if request.method == 'POST':
+
+        # create a form instance and populate it with data from the request:
+        form = CategoryForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            category_id = None
+            name = None
+            description = None
+            logger.debug(request.POST);
+            try:
+                category_id = request.POST['cid']
+                logger.info("Edit category #{} by user #{}".format(
+                    category_id, user.id
+                ));
+            except Exception as e:
+                logger.error(str(e))
+
+            name = request.POST['name']
+            description = request.POST['description']
+
+            category = Category()
+            is_valid = True
+            int_category_id = None
+            try:
+                int_category_id = int(category_id)
+            except ValueError as e:
+                msg = "Value '{}' for category_id is not valid"
+                logger.error(e)
+                logger.error(msg.format(company_id))
+
+            if int_category_id is not None:
+                category = Category.objects.get(pk=int_category_id)
+                if category.auth_user_id != user.id:
+                    msg = "Non sei il proprietario di questa Category. Non la "
+                    msg += "puoi modificare"
+                    logger.error(msg)
+                    is_valid = False
+
+            category.auth_user_id = user.id
+            category.name = name
+            category.description = description
+            if is_valid:
+                category.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect('/manage/categories')
+    elif request.method == 'DELETE':
+        dict = QueryDict(request.body)
+        categoryId = dict['categoryId']
+        category = Category.objects.get(pk=categoryId)
+        if category.auth_user_id != user.id:
+            msg = "Questa Category non ti appartiene. Non la puoi eliminare"
+            logger.warning(msg)
+        else:
+            msg = "Eliminazione della Category #{} da parte dell'utente #{}"
+            msg.format(categoryId, user.id)
+            logger.info(msg)
+            category.delete()
+            return JsonResponse({'msg': msg})
+    # If method is GET
+    else:
+        category = None
+        category_id = None
+        try:
+            category_id = request.GET['cid']
+        except Exception as e:
+            logger.error(str(e))
+        if category_id is not None:
+            category = Category.objects.get(pk=category_id)
+            form_description = "Modifica "
+        # if a GET (or any other method) we'll create a blank formelse:
+        form = CategoryForm(instance=category)
+
+    context = {
+        'page_title': 'Categories',
+        'form': form,
+        'categories': categories,
+        'category_id': category_id,
+        'form_description': form_description
+    }
+    return render(request, 'manageCategories.html', context=context)

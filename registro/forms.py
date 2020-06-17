@@ -16,3 +16,8 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ['name']
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'description']
