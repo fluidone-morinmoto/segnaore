@@ -148,7 +148,7 @@ def manageCompanies(request):
             logger.warning(msg)
         else:
             msg = "Eliminazione della Company #{} da parte dell'utente #{}"
-            msg.format(companyId, user.id)
+            msg = msg.format(companyId, user.id)
             logger.info(msg)
             company.delete()
             return JsonResponse({'msg': msg})
@@ -238,7 +238,7 @@ def manageCategories(request):
             logger.warning(msg)
         else:
             msg = "Eliminazione della Category #{} da parte dell'utente #{}"
-            msg.format(categoryId, user.id)
+            msg = msg.format(categoryId, user.id)
             logger.info(msg)
             category.delete()
             return JsonResponse({'msg': msg})
@@ -264,3 +264,96 @@ def manageCategories(request):
         'form_description': form_description
     }
     return render(request, 'manageCategories.html', context=context)
+
+@login_required
+def manageProjects(request):
+    form = None
+    user = request.user
+    projects = Project.objects.filter(auth_user_id=user.id)
+
+    form_description = "Crea un nuovo "
+
+    if request.method == 'POST':
+
+        # create a form instance and populate it with data from the request:
+        form = ProjectForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            project_id = None
+            logger.debug(request.POST);
+            try:
+                project_id = request.POST['pid']
+                logger.info("Edit project #{} by user #{}".format(
+                    project_id, user.id
+                ));
+            except Exception as e:
+                logger.error(str(e))
+
+            name = request.POST['name']
+            description = request.POST['description']
+            code = request.POST['code']
+            company_id = request.POST['company']
+
+            project = Project()
+            is_valid = True
+            int_project_id = None
+            try:
+                int_project_id = int(project_id)
+            except ValueError as e:
+                msg = "Value '{}' for project_id is not valid"
+                logger.error(e)
+                logger.error(msg.format(project_id))
+
+            if int_project_id is not None:
+                project = Project.objects.get(pk=int_project_id)
+                if project.auth_user_id != user.id:
+                    msg = "Non sei il proprietario di questo Progetto. Non lo "
+                    msg += "puoi modificare"
+                    logger.error(msg)
+                    is_valid = False
+
+            project.auth_user_id = user.id
+            project.name = name
+            project.description = description
+            project.code = code
+            project.company_id = company_id
+
+            if is_valid:
+                project.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect('/manage/projects')
+    elif request.method == 'DELETE':
+        dict = QueryDict(request.body)
+        projectId = dict['projectId']
+        project = Project.objects.get(pk=projectId)
+        if project.auth_user_id != user.id:
+            msg = "Questa Progetto non ti appartiene. Non lo puoi eliminare"
+            logger.warning(msg)
+        else:
+            msg = "Eliminazione del Project #{} da parte dell'utente #{}"
+            msg = msg.format(projectId, user.id)
+            logger.info(msg)
+            project.delete()
+            return JsonResponse({'msg': msg})
+    # If method is GET
+    else:
+        project = None
+        project_id = None
+        try:
+            project_id = request.GET['pid']
+        except Exception as e:
+            logger.error(str(e))
+        if project_id is not None:
+            project = Project.objects.get(pk=project_id)
+            form_description = "Modifica "
+        # if a GET (or any other method) we'll create a blank formelse:
+        form = ProjectForm(instance=project)
+
+    context = {
+        'page_title': 'Projects',
+        'form': form,
+        'projects': projects,
+        'project_id': project_id,
+        'form_description': form_description
+    }
+    return render(request, 'manageProjects.html', context=context)

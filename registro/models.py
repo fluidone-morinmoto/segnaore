@@ -83,6 +83,9 @@ class Category(Timestamps, SoftDelete):
     updated_at = models.DateTimeField()
     deleted_at = models.DateTimeField(blank=True, null=True)
 
+    def __str__(self):
+        return  "{} #{}".format(self.name, self.id)
+
     class Meta:
         managed = False
         db_table = 'category'
@@ -92,6 +95,9 @@ class Company(Timestamps, SoftDelete):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     auth_user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
+
+    def __str__(self):
+        return  "{} #{}".format(self.name, self.id)
 
     class Meta:
         managed = False
