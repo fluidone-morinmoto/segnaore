@@ -9,3 +9,4 @@ django-registration==3.1
 six==1.15.0
 django-six==1.0.4
 django-crispy-forms==1.9.1
+django-flatpickr==1.0.1

@@ -1,0 +1,96 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+Projects
+{% endblock %}
+
+{% block content %}
+
+<h2>{{ form_description }} Ore lavorate</h2>
+<form action="/manage/worked_hours" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="hidden" name="whid" value="{{worked_hours_id}}" />
+    <input type="submit" value="Salva">
+</form>
+<hr />
+<h2>Lista delle tue Ore Lavorate</h2>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Dalle</th>
+            <th>Alle</th>
+            <th>Descrizione</th>
+            <th>Categoria</th>
+            <th>Progetto</th>
+            <th>Modifica</th>
+            <!--<th>Elimina</th>-->
+        </tr>
+    </thead>
+    <tbody>
+        {% for wh in worked_hours_list %}
+            <tr class="worked_hours">
+                <td>{{wh.from_time}}</td>
+                <td>{{wh.to_time}}</td>
+                <td>{{wh.description}}</td>
+                <td>{{wh.category}}</td>
+                <td>{{wh.project}}</td>
+                <td>
+                    <a href="/manage/worked_hours?whid={{wh.id}}">
+                        Modifica #{{wh.id}}
+                    </a>
+                </td>
+                <!-- <td>
+                    <a href="#" class="deleteProject">
+                        Elimina #<span class="projectId">{{p.id}}</span>
+                    </a>
+                </td> -->
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+    function activateDateTimePicker(selector) {
+        jQuery.datetimepicker.setLocale('it');
+
+        jQuery(selector).datetimepicker({
+            i18n:{
+                if:{
+                    months:[
+                        'Gennaio','Febbraio','Marco','Aprile', 'Maggio',
+                        'Giugno','Luglio','Agosto', 'Settembre', 'Ottobre',
+                        'Novembre','Dicembre',
+                    ],
+                    dayOfWeek:[
+                        "Lun", "Mar", "Mer", "Gio",
+                        "Ven", "Sab", "Dom",
+                    ]
+                }
+            },
+            timepicker: true,
+            format:'Y-m-d H:i:s',
+        });
+
+        // jQuery("#id_from_time").datetimepicker({
+        //     //format:'d/m/Y H:i:s',
+        //     format:'Y-m-d H:i:s',
+        // });
+        // jQuery("#id_to_time").datetimepicker({
+        //     //format:'d/m/Y H:i:s',
+        //     format:'Y-m-d H:i:s',
+        // });
+    }
+
+    activateDateTimePicker("#id_from_time");
+    activateDateTimePicker("#id_to_time");
+</script>
+{% endblock %}

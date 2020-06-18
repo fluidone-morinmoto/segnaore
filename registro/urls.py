@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^manage/companies', views.manageCompanies, name='manage_companies'),
     url(r'^manage/categories', views.manageCategories, name='manage_categories'),
     url(r'^manage/projects', views.manageProjects, name='manage_projects'),
+    url(r'^manage/worked_hours', views.manageWorkedHours, name='worked_hours'),
 ]

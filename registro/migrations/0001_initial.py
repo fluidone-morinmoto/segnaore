@@ -86,36 +86,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Category',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(blank=True, max_length=255, null=True)),
-                ('description', models.CharField(blank=True, max_length=255, null=True)),
-                ('created_at', models.DateTimeField()),
-                ('updated_at', models.DateTimeField()),
-                ('deleted_at', models.DateTimeField(blank=True, null=True)),
-            ],
-            options={
-                'db_table': 'category',
-                'managed': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='Company',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(blank=True, max_length=255, null=True)),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
-                ('updated_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
-                ('deleted_at', models.DateTimeField(blank=True, null=True)),
-
-            ],
-            options={
-                'db_table': 'company',
-                'managed': False,
-            },
-        ),
-        migrations.CreateModel(
             name='DjangoAdminLog',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -164,39 +134,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'django_session',
-                'managed': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='Project',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(blank=True, max_length=255, null=True)),
-                ('description', models.CharField(blank=True, max_length=255, null=True)),
-                ('code', models.CharField(blank=True, max_length=255, null=True)),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
-                ('updated_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
-                ('deleted_at', models.DateTimeField(blank=True, null=True)),
-
-            ],
-            options={
-                'db_table': 'project',
-                'managed': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='WorkedHours',
-            fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('from_time', models.DateTimeField(blank=True, null=True)),
-                ('to_time', models.DateTimeField(blank=True, null=True)),
-                ('description', models.CharField(blank=True, max_length=255, null=True)),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
-                ('updated_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
-
-            ],
-            options={
-                'db_table': 'worked_hours',
                 'managed': False,
             },
         ),

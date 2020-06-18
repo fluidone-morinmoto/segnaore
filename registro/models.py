@@ -87,7 +87,7 @@ class Category(Timestamps, SoftDelete):
         return  "{} #{}".format(self.name, self.id)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'category'
 
 
@@ -100,7 +100,7 @@ class Company(Timestamps, SoftDelete):
         return  "{} #{}".format(self.name, self.id)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'company'
 
 
@@ -155,8 +155,11 @@ class Project(Timestamps, SoftDelete):
     company = models.ForeignKey(Company, models.DO_NOTHING, blank=True, null=True)
     auth_user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
 
+    def __str__(self):
+        return  "{} #{}".format(self.name, self.id)
+        
     class Meta:
-        managed = False
+        managed = True
         db_table = 'project'
 
 
@@ -167,7 +170,8 @@ class WorkedHours(Timestamps):
     description = models.CharField(max_length=255, blank=True, null=True)
     category = models.ForeignKey(Category, models.DO_NOTHING, blank=True, null=True)
     project = models.ForeignKey(Project, models.DO_NOTHING, blank=True, null=True)
+    auth_user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'worked_hours'

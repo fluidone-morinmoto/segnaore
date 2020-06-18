@@ -120,7 +120,7 @@ def manageCompanies(request):
 
             try:
                 int_company_id = int(company_id)
-            except ValueError as e:
+            except Exception as e:
                 msg = "Value '{}' for company_id is not valid"
                 logger.error(e)
                 logger.error(msg.format(company_id))
@@ -209,10 +209,10 @@ def manageCategories(request):
             int_category_id = None
             try:
                 int_category_id = int(category_id)
-            except ValueError as e:
+            except Exception as e:
                 msg = "Value '{}' for category_id is not valid"
                 logger.error(e)
-                logger.error(msg.format(company_id))
+                logger.error(msg.format(category_id))
 
             if int_category_id is not None:
                 category = Category.objects.get(pk=int_category_id)
@@ -299,7 +299,7 @@ def manageProjects(request):
             int_project_id = None
             try:
                 int_project_id = int(project_id)
-            except ValueError as e:
+            except Exception as e:
                 msg = "Value '{}' for project_id is not valid"
                 logger.error(e)
                 logger.error(msg.format(project_id))
@@ -357,3 +357,99 @@ def manageProjects(request):
         'form_description': form_description
     }
     return render(request, 'manageProjects.html', context=context)
+
+@login_required
+def manageWorkedHours(request):
+    form = None
+    user = request.user
+    worked_hours_list = WorkedHours.objects.filter(auth_user_id=user.id)
+    worked_hours_id = None
+
+    form_description = "Aggiungi "
+
+    if request.method == 'POST':
+
+        # create a form instance and populate it with data from the request:
+        form = WorkedHoursForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            logger.debug(request.POST);
+            try:
+                worked_hours_id = request.POST['whid']
+                logger.info("Edit worked_hours #{} by user #{}".format(
+                    worked_hours_id, user.id
+                ));
+            except Exception as e:
+                logger.error(str(e))
+
+            from_time = request.POST['from_time']
+            to_time = request.POST['to_time']
+            description = request.POST['description']
+            category = request.POST['category']
+            project = request.POST['project']
+
+            worked_hours = WorkedHours()
+            is_valid = True
+            int_worked_hours_id = None
+            try:
+                int_worked_hours_id = int(worked_hours_id)
+            except Exception as e:
+                msg = "Value '{}' for worked_hours_id is not valid"
+                logger.error(e)
+                logger.error(msg.format(worked_hours_id))
+
+            if int_worked_hours_id is not None:
+                worked_hours = WorkedHours.objects.get(pk=int_worked_hours_id)
+                if worked_hours.auth_user_id != user.id:
+                    msg = "Non sei il proprietario di questa registrazione "
+                    msg += "delle ore. Non la puoi modificare"
+                    logger.error(msg)
+                    is_valid = False
+
+            worked_hours.from_time = from_time
+            worked_hours.to_time = to_time
+            worked_hours.description = description
+            worked_hours.category_id = category
+            worked_hours.project_id = project
+            worked_hours.auth_user_id = user.id
+
+            if is_valid:
+                worked_hours.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect('/manage/worked_hours')
+    # elif request.method == 'DELETE':
+    #     dict = QueryDict(request.body)
+    #     worked_hoursId = dict['worked_hoursId']
+    #     worked_hours = WorkedHours.objects.get(pk=worked_hoursId)
+    #     if worked_hours.auth_user_id != user.id:
+    #         msg = "Questa registrazione delle ore non ti appartiene. "
+    #         msg += "Non la puoi eliminare"
+    #         logger.warning(msg)
+    #     else:
+    #         msg = "Eliminazione del WorkedHours #{} da parte dell'utente #{}"
+    #         msg = msg.format(worked_hoursId, user.id)
+    #         logger.info(msg)
+    #         worked_hours.delete()
+    #         return JsonResponse({'msg': msg})
+    # If method is GET
+    else:
+        worked_hours = None
+        worked_hours_id = None
+        try:
+            worked_hours_id = request.GET['whid']
+        except Exception as e:
+            logger.error(str(e))
+        if worked_hours_id is not None:
+            worked_hours = WorkedHours.objects.get(pk=worked_hours_id)
+            form_description = "Modifica "
+        # if a GET (or any other method) we'll create a blank formelse:
+        form = WorkedHoursForm(instance=worked_hours)
+
+    context = {
+        'page_title': 'Worked Hours',
+        'form': form,
+        'worked_hours_list': worked_hours_list,
+        'worked_hours_id': worked_hours_id,
+        'form_description': form_description
+    }
+    return render(request, 'manageWorkedHours.html', context=context)
