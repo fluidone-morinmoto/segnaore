@@ -10,3 +10,10 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+DEFAULT_FROM_EMAIL = 'admin@yourdomanin.ext'
+EMAIL_USE_TLS = False
+EMAIL_HOST = 'smtp.yourdomain.ext'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'yourusername'
+EMAIL_HOST_PASSWORD = 'P4ssw0rd_Sp01l3r'
