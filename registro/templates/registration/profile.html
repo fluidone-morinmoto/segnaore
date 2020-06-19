@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block content %}
+
+{% csrf_token %}
+
+Benvenuto {{ user.username }}
+{% endblock %}

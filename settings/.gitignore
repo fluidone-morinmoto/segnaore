@@ -1,0 +1,5 @@
+*
+!.gitignore
+!default.py
+!sample.py
+!curl.txt

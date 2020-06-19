@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+Verifica non riuscita
+{% endblock %}
+
+{% block content %}
+
+{% csrf_token %}
+
+La verifica del tuo account non è andata a buon fine.
+Controlla di non aver già attivato il tuo account
+
+<a href="/accounts/login/">Login</a>
+<a href="/accounts/logout/">Logout</a>
+{% endblock %}

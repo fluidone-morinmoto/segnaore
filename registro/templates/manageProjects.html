@@ -1,0 +1,90 @@
+{% extends "index.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+Projects
+{% endblock %}
+
+{% block content %}
+
+<h2>{{ form_description }} Progetto</h2>
+<form action="/manage/projects" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="hidden" name="pid" value="{{project_id}}" />
+    <input type="submit" value="Salva">
+</form>
+<hr />
+<h2>Lista dei tuoi Progetti</h2>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Codice</th>
+            <th>Nome</th>
+            <th>Descrizione</th>
+            <th>Cliente</th>
+            <th>Modifica</th>
+            <th>Elimina</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in projects %}
+            <tr class="project">
+                <td>{{p.code}}</td>
+                <td>{{p.name}}</td>
+                <td>{{p.description}}</td>
+                <td>{{p.company}}</td>
+                <td>
+                    <a href="/manage/projects?pid={{p.id}}">
+                        Modifica #{{p.id}}
+                    </a>
+                </td>
+                <td>
+                    <a href="#" class="deleteProject">
+                        Elimina #<span class="projectId">{{p.id}}</span>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script type="text/javascript">
+    function deleteProject() {
+        jQuery('.deleteProject').on('click', function(e) {
+            e.preventDefault();
+            var $this = jQuery(this);
+            var projectId = $this.find('.projectId').text();
+            var token = jQuery('input[name=csrfmiddlewaretoken]').val();
+            var row = $this.closest('.project');
+            jQuery.ajax({
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", token);
+                },
+                method: 'DELETE',
+                url: '/manage/projects/',
+                data: {
+                    projectId: projectId
+                },
+                dataType: 'json',
+                contentType: 'application/json; charset=UTF-8',
+                success: function(data) {
+                    console.log(row);
+                    row.remove();
+                }
+            });
+        });
+    }
+
+    deleteProject();
+
+</script>
+{% endblock %}
