@@ -17,15 +17,31 @@ class CompanyForm(forms.ModelForm):
         model = Company
         fields = ['name']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].label = "Nome"
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['name', 'description']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].label = "Nome"
+        self.fields['description'].label = "Descrizione"
+
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'description', 'code', 'company']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].label = "Nome"
+        self.fields['description'].label = "Descrizione"
+        self.fields['code'].label = "Codice"
+        self.fields['company'].label = "Cliente"
 
 class WorkedHoursForm(forms.ModelForm):
     class Meta:
@@ -36,4 +52,9 @@ class WorkedHoursForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['from_time'].input_formats = ['%d/%m/%Y %H:%M']
+        self.fields['from_time'].label = "Dalle"
         self.fields['to_time'].input_formats = ['%d/%m/%Y %H:%M']
+        self.fields['to_time'].label = "Alle"
+        self.fields['description'].label = "Descrizione"
+        self.fields['category'].label = "Categoria"
+        self.fields['project'].label = "Progetto"

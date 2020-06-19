@@ -3,12 +3,12 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-Companies
+Clienti
 {% endblock %}
 
 {% block content %}
 
-<h2>{{ form_description }} Company</h2>
+<h2>{{ form_description }} Cliente</h2>
 <form action="/manage/companies" method="post">
     {% csrf_token %}
     {{ form|crispy }}
@@ -16,7 +16,7 @@ Companies
     <input type="submit" value="Salva">
 </form>
 <hr />
-<h2>Lista delle tue Companies</h2>
+<h2>Lista dei tuoi Clienti</h2>
 
 <table class="table table-striped table-bordered">
     <thead>

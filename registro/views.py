@@ -169,7 +169,7 @@ def manageCompanies(request):
         form = CompanyForm(instance=company)
 
     context = {
-        'page_title': 'Companies',
+        'page_title': 'Clienti',
         'form': form,
         'companies': companies,
         'company_id': company_id,
@@ -259,7 +259,7 @@ def manageCategories(request):
         form = CategoryForm(instance=category)
 
     context = {
-        'page_title': 'Categories',
+        'page_title': 'Categorie',
         'form': form,
         'categories': categories,
         'category_id': category_id,
@@ -352,7 +352,7 @@ def manageProjects(request):
         form = ProjectForm(instance=project)
 
     context = {
-        'page_title': 'Projects',
+        'page_title': 'Progetti',
         'form': form,
         'projects': projects,
         'project_id': project_id,
@@ -449,7 +449,7 @@ def manageWorkedHours(request):
         form = WorkedHoursForm(instance=worked_hours)
 
     context = {
-        'page_title': 'Worked Hours',
+        'page_title': 'Ore Lavorate',
         'form': form,
         'worked_hours_list': worked_hours_list,
         'worked_hours_id': worked_hours_id,
