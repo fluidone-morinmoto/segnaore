@@ -1,20 +1,45 @@
-# segnaore
-A simple Django backend for annotate worked hours
+#### Segna Ore
+
+A system for annotate your worked hours.
 
 
-# requirements
-python 3.6
-mysql
+# Requirements
 
+Python => 3.6
 
-# install
+for mysql install libmysqlclient-dev. For Debian based system use:
 
-create a python virtualenv and activate it
+$ sudo apt-get install libmysqlclient-dev
 
-clone the repository with:
+# Installation
 
-$ git clone https://github.com/fluidone-morinmoto/segnaore.git
+- Create a virtualenv
 
-copy the settings/sample.py file and valorize it with your database connection values
+- Install required modules
+$ pip install -r requirements.txt
 
-make migrations
+- Create your configuration file and populate it with your settings. Eg.:
+
+$ cp settings/sample.py settings/local.py
+
+- Run migrations
+
+$ (venv) python manage.py migrate --settings=settings.local
+
+- You can create a superuser from shell
+
+$ (venv) python manage.py createsuperuser --settings=settings.local
+
+- Run the local server:
+
+$ (venv) python manage.py runserver 8081 --settings=settings.local
+
+- or use the shortcut:
+
+$ (venv) bash runserver.sh
+
+# Contact me
+
+Fluidone
+
+morin@fluidone.it
