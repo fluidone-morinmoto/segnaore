@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,7 @@ from registro.models import *
 from registro.serializers import *
 from registro.forms import *
 from registro.tokens import account_activation_token
+
 from . import logger
 
 
@@ -373,7 +375,6 @@ def manageWorkedHours(request):
         form = WorkedHoursForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            logger.debug(request.POST);
             try:
                 worked_hours_id = request.POST['whid']
                 logger.info("Edit worked_hours #{} by user #{}".format(
@@ -406,7 +407,9 @@ def manageWorkedHours(request):
                     logger.error(msg)
                     is_valid = False
 
+            from_time = datetime.strptime(from_time, '%d/%m/%Y %H:%M')
             worked_hours.from_time = from_time
+            to_time = datetime.strptime(to_time, '%d/%m/%Y %H:%M')
             worked_hours.to_time = to_time
             worked_hours.description = description
             worked_hours.category_id = category
