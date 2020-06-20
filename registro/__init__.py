@@ -4,7 +4,7 @@ from django.conf import settings
 
 default_app_config = 'registro.apps.RegistroConfig'
 
-APP_VERSION = 'beta'
+APP_VERSION = 'beta-fix01-dev'
 __version__ = APP_VERSION
 __app_alias__ = 'Registro segna ore'
 
