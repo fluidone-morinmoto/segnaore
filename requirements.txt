@@ -1,5 +1,5 @@
 wheel
-Django==3.0.3
+Django==3.0.7
 mysqlclient==1.4.6
 python-json-logger==0.1.11
 djangorestframework==3.11.0
