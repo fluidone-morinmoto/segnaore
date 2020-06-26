@@ -11,6 +11,11 @@ DATABASES = {
     }
 }
 
+LOGGING['handlers']['file']['filename'] = "logs/file.log"
+LOGGING['handlers']['dev_file']['filename'] = "logs/file_dev.log"
+LOGGING['loggers']['base']['handlers'].append('dev_file')
+
+
 DEFAULT_FROM_EMAIL = 'admin@yourdomanin.ext'
 EMAIL_USE_TLS = False
 EMAIL_HOST = 'smtp.yourdomain.ext'
