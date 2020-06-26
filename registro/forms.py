@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from registro.models import *
-#from flatpickr import DateTimePickerInput
+from . import logger
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
@@ -58,3 +58,20 @@ class WorkedHoursForm(forms.ModelForm):
         self.fields['description'].label = "Descrizione"
         self.fields['category'].label = "Categoria"
         self.fields['project'].label = "Progetto"
+
+class BasicReportForm(forms.Form):
+
+    from_time = forms.CharField(label='Dal', max_length=100)
+    from_time.required = False
+    to_time = forms.CharField(label='Al', max_length=100)
+    to_time.required = False
+    project = forms.ModelChoiceField(queryset=Project.objects.all())
+    project.required = False
+    category = forms.ModelChoiceField(queryset=Category.objects.all())
+    category.required = False;
+    company = forms.ModelChoiceField(queryset=Company.objects.all())
+    company.required = False;
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        logger.debug(args)

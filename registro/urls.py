@@ -24,9 +24,11 @@ urlpatterns = [
         name='activate'
     ),
     url(r'^home/$', views.home, name='home'),
-    url(r'^manage/companies', views.manageCompanies, name='manage_companies'),
-    url(r'^manage/categories', views.manageCategories, name='manage_categories'),
-    url(r'^manage/projects', views.manageProjects, name='manage_projects'),
-    url(r'^manage/worked_hours', views.manageWorkedHours, name='worked_hours'),
+    url(r'^manage/companies', views.manage_companies, name='manage_companies'),
+    url(r'^manage/categories', views.manage_categories, name='manage_categories'),
+    url(r'^manage/projects', views.manage_projects, name='manage_projects'),
+    url(r'^manage/worked_hours', views.manage_worked_hours, name='worked_hours'),
+    url(r'^reports/basic', views.basic_report, name='basic_report'),
+    url(r'^reports/result', views.report_result, name='report_result'),
     path('', views.home, name='home')
 ]
