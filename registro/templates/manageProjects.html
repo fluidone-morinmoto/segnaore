@@ -36,14 +36,14 @@ Projects
                 <td>{{p.name}}</td>
                 <td>{{p.description}}</td>
                 <td>{{p.company}}</td>
-                <td>
+                <td class="action">
                     <a href="/manage/projects?pid={{p.id}}">
-                        Modifica #{{p.id}}
+                        <i class="fa fa-edit"></i>
                     </a>
                 </td>
-                <td>
-                    <a href="#" class="deleteProject">
-                        Elimina #<span class="projectId">{{p.id}}</span>
+                <td class="action">
+                    <a href="#" class="deleteProject" data-project-id="{{p.id}}">
+                        <i class="fa fa-trash-o"></i>
                     </a>
                 </td>
             </tr>
@@ -62,7 +62,7 @@ Projects
         jQuery('.deleteProject').on('click', function(e) {
             e.preventDefault();
             var $this = jQuery(this);
-            var projectId = $this.find('.projectId').text();
+            var projectId = $this.attr('data-project-id');
             var token = jQuery('input[name=csrfmiddlewaretoken]').val();
             var row = $this.closest('.project');
             jQuery.ajax({

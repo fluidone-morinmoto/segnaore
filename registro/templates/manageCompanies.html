@@ -30,14 +30,14 @@ Clienti
         {% for c in companies %}
             <tr class="company">
                 <td>{{c.name}}</td>
-                <td>
+                <td class="action">
                     <a href="/manage/companies?cid={{c.id}}">
-                        Modifica #{{c.id}}
+                        <i class="fa fa-edit"></i>
                     </a>
                 </td>
-                <td>
-                    <a href="#" class="deleteCompany">
-                        Elimina #<span class="companyId">{{c.id}}</span>
+                <td class="action">
+                    <a href="#" class="deleteCompany" data-company-id="{{c.id}}">
+                        <i class="fa fa-trash-o"></i>
                     </a>
                 </td>
             </tr>
@@ -56,7 +56,7 @@ Clienti
         jQuery('.deleteCompany').on('click', function(e) {
             e.preventDefault();
             var $this = jQuery(this);
-            var companyId = $this.find('.companyId').text();
+            var companyId = $this.attr('data-company-id')
             var token = jQuery('input[name=csrfmiddlewaretoken]').val();
             var row = $this.closest('.company');
             jQuery.ajax({

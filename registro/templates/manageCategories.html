@@ -32,14 +32,14 @@ Categories
             <tr class="category">
                 <td>{{c.name}}</td>
                 <td>{{c.description}}</td>
-                <td>
+                <td class="action">
                     <a href="/manage/categories?cid={{c.id}}">
-                        Modifica #{{c.id}}
+                        <i class="fa fa-edit"></i>
                     </a>
                 </td>
-                <td>
-                    <a href="#" class="deleteCategory">
-                        Elimina #<span class="categoryId">{{c.id}}</span>
+                <td class="action">
+                    <a href="#" class="deleteCategory" data-category-id="{{c.id}}">
+                        <i class="fa fa-trash-o"></i>
                     </a>
                 </td>
             </tr>
@@ -58,7 +58,7 @@ Categories
         jQuery('.deleteCategory').on('click', function(e) {
             e.preventDefault();
             var $this = jQuery(this);
-            var categoryId = $this.find('.categoryId').text();
+            var categoryId = $this.attr('data-category-id');
             var token = jQuery('input[name=csrfmiddlewaretoken]').val();
             var row = $this.closest('.category');
             jQuery.ajax({
