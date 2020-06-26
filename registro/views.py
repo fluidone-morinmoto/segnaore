@@ -91,7 +91,7 @@ def profile(request):
     return render(request, 'registration/profile.html', context=context)
 
 @login_required
-def manageCompanies(request):
+def manage_companies(request):
     form = None
     user = request.user
     companies = Company.objects.filter(auth_user_id=user.id)
@@ -178,7 +178,7 @@ def manageCompanies(request):
     return render(request, 'manageCompanies.html', context=context)
 
 @login_required
-def manageCategories(request):
+def manage_categories(request):
     form = None
     user = request.user
     categories = Category.objects.filter(auth_user_id=user.id)
@@ -268,7 +268,7 @@ def manageCategories(request):
     return render(request, 'manageCategories.html', context=context)
 
 @login_required
-def manageProjects(request):
+def manage_projects(request):
     form = None
     user = request.user
     projects = Project.objects.filter(auth_user_id=user.id)
@@ -361,7 +361,7 @@ def manageProjects(request):
     return render(request, 'manageProjects.html', context=context)
 
 @login_required
-def manageWorkedHours(request):
+def manage_worked_hours(request):
     form = None
     user = request.user
     worked_hours_list = WorkedHours.objects.filter(auth_user_id=user.id)
@@ -456,3 +456,70 @@ def manageWorkedHours(request):
         'form_description': form_description
     }
     return render(request, 'manageWorkedHours.html', context=context)
+
+@login_required
+def basic_report(request):
+    user = request.user
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = BasicReportForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/reports/basic')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = BasicReportForm()
+
+    context = {
+        'page_title': 'Report',
+        'form': form
+    }
+    return render(request, 'basic_report.html', context=context)
+
+@login_required
+def report_result(request):
+
+    data = WorkedHours.objects.all()
+    from_time_str = request.POST['from_time']
+    if from_time_str:
+        ## TODO validate format
+        from_time = datetime.strptime(from_time_str, '%d/%m/%Y %H:%M')
+        ## END TODO
+        data = data.filter(from_time__gte=from_time)
+
+    to_time_str = request.POST['to_time']
+    if to_time_str:
+        ## TODO validate format
+        to_time = datetime.strptime(to_time_str, '%d/%m/%Y %H:%M')
+        ## END TODO
+        data = data.filter(to_time__lte=to_time)
+
+    ## TODO ignore company filter if project is passed
+    project_id = request.POST['project']
+    if project_id:
+        data = data.filter(project_id=project_id)
+    ## END TODO
+
+    ## TODO get only company's projects if company is passed (join) and project
+    ## is not passed
+    company_id = request.POST['company']
+    if company_id:
+        data = data.filter(company_id=company_id)
+    ## END TODO
+
+    category_id = request.POST['category']
+    if category_id:
+        data = data.filter(category_id=category_id)
+
+
+    data = data.order_by('from_time')
+    context = {
+        'page_title': 'HTML Report',
+        'data': data
+    }
+    return render(request, 'report_result.html', context=context)

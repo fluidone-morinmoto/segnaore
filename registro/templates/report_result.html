@@ -1,0 +1,40 @@
+{% extends "index.html" %}
+
+{% block title %}
+Risultati per il report
+{% endblock %}
+
+{% block content %}
+
+{% csrf_token %}
+
+<h2>Risultato del report</h2>
+
+
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Dalle</th>
+            <th>Alle</th>
+            <th>Descrizione</th>
+            <th>Categoria</th>
+            <th>Progetto</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for wh in data %}
+            <tr class="worked_hours">
+                <td>{{wh.from_time|date:'d/m/Y H:i'}}</td>
+                <td>{{wh.to_time|date:'d/m/Y H:i'}}</td>
+                <td>{{wh.description}}</td>
+                <td>{{wh.category}}</td>
+                <td>{{wh.project}}</td>
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
