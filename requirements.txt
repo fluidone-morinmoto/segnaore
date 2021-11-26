@@ -1,11 +1,11 @@
 wheel
-Django==3.0.7
+Django==3.1.13
 mysqlclient==1.4.6
 python-json-logger==0.1.11
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 Markdown==3.2.2
 django-filter==2.3.0
-django-registration==3.1
+django-registration==3.1.2
 six==1.15.0
 django-six==1.0.4
 django-crispy-forms==1.9.1
