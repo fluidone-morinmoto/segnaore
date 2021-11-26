@@ -177,3 +177,62 @@ LOGGING = {
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'bootstrap')]
 STATIC_ROOT = 'static/'
 STATIC_URL = '/static/'
+
+
+# Since among loggers and handlers levels the one which wins is the highest,
+# keep the 'base' logger level to DEBUG (low) and set the desired level in the
+# handler to get just the needed logs on a per-handler basis
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'default': {
+            'format': '%(asctime)s [%(process)d:%(levelname)s:%(module)s:%(lineno)d] %(message)s'
+        },
+        'json': {
+            'format': '%(asctime)s %(levelname)s %(message)s',
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/sore.log',
+            'formatter': 'default',
+            'maxBytes': 1024 * 1024 * 1024 * 10,
+            'backupCount': 7,
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler'
+        },
+        'dev_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/sore_dev.log',
+            'formatter': 'json',
+            'maxBytes': 1024 * 1024 * 10,
+            'backupCount': 3
+        },
+        'file_json': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/sore_json.log',
+            'formatter': 'json',
+            'maxBytes': 1024 * 1024 * 1024 * 10,
+            'backupCount': 7,
+        },
+    },
+    'loggers': {
+        'base': {
+            'handlers': ['file', 'file_json'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+    # 'filters': {
+    #     'content_history_json' : {
+    #         '()': 'registro.logstuff.ContentHistoryJsonFilter'
+    #     }
+    # }
+}
