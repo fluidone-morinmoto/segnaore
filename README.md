@@ -26,6 +26,10 @@ $ cp settings/sample.py settings/local.py
 
 $ (venv) python manage.py migrate --settings=settings.local
 
+- Collect static files
+
+$ (venv) python manage.py collectstatic --settings=settings.local
+
 - You can create a superuser from shell
 
 $ (venv) python manage.py createsuperuser --settings=settings.local
